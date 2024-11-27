@@ -8,7 +8,6 @@ import java.util.List;
  * @author Muzammil Cheema
  */
 public class Square implements Shape {
-    private double sidelength;
     private Point[] points;
 
     /**
@@ -26,7 +25,6 @@ public class Square implements Shape {
         points = Arrays.copyOfRange(vertices, 0, 4);
         if (!isValid(points))
             throw new IllegalArgumentException("Point ordering is invalid and will not form a square.");
-        sidelength = distance(points[0], points[1]);
     }
 
     private boolean isValid(Point... vertices) {
@@ -35,10 +33,6 @@ public class Square implements Shape {
         Point c = vertices[2];
         Point d = vertices[3];
         return a.x >= b.x && a.x >= c.x && a.y >= c.y && a.y >= d.y && b.x <= d.x && b.y <= d.y && c.x <= d.x;
-    }
-
-    private double distance(Point a, Point b) {
-        return Math.sqrt(Math.pow(a.x-b.x, 2) + Math.pow(a.y-b.y, 2));
     }
 
     @Override
