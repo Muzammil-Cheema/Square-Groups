@@ -32,7 +32,15 @@ public class Square implements Shape {
         Point b = vertices[1];
         Point c = vertices[2];
         Point d = vertices[3];
-        return a.x >= b.x && a.x >= c.x && a.y >= c.y && a.y >= d.y && b.x <= d.x && b.y <= d.y && c.x <= d.x;
+        System.out.println(a.x >= b.x);
+        System.out.println(a.x >= c.x);
+        System.out.println(a.y >= c.y);
+        System.out.println(a.y >= d.y);
+        System.out.println(b.x <= d.x);
+        System.out.println(b.y >= d.y);
+        System.out.println(c.x <= d.x);
+
+        return a.x >= b.x && a.x >= c.x && a.y >= c.y && a.y >= d.y && b.x <= d.x && b.y >= d.y && c.x <= d.x;
     }
 
     @Override
@@ -91,7 +99,7 @@ public class Square implements Shape {
 
         Point p = new Point("P", 0.3, 0.3);
 
-        Square sq1 = new Square(a, b, c, d); // throws an IllegalArgumentException
+//        Square sq1 = new Square(a, b, c, d); // throws an IllegalArgumentException
         Square sq2 = new Square(d, a, b, c); // forms a square
         Square sq3 = new Square(p, p, p, p); // forms a "trivial" square (this is a limiting case, but still valid)
 
