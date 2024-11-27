@@ -1,14 +1,16 @@
 import java.util.Arrays;
-import java.util.List;
-
 /**
  * The class implementing squares.
  * Note: you can add more methods if you want, but additional methods must be <code>private</code> or <code>protected</code>.
  *
  * @author Muzammil Cheema
  */
-public class Square implements Shape {
+public class Square implements Shape, Cloneable {
     private Point[] points;
+
+    protected Square(){
+        points = new Point[4];
+    }
 
     /**
      * The constructor accepts an array of <code>Point</code>s to form the vertices of the square. If more than four
@@ -32,39 +34,37 @@ public class Square implements Shape {
         Point b = vertices[1];
         Point c = vertices[2];
         Point d = vertices[3];
-        System.out.println(a.x >= b.x);
-        System.out.println(a.x >= c.x);
-        System.out.println(a.y >= c.y);
-        System.out.println(a.y >= d.y);
-        System.out.println(b.x <= d.x);
-        System.out.println(b.y >= d.y);
-        System.out.println(c.x <= d.x);
-
         return a.x >= b.x && a.x >= c.x && a.y >= c.y && a.y >= d.y && b.x <= d.x && b.y >= d.y && c.x <= d.x;
     }
 
     @Override
     public Square rotateBy(int degrees) {
-        Point center = center();
+        Square ans;
+        try {
+            ans = this.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+        Point center = ans.center();
         double radians = Math.PI * degrees/180;
-        translateBy(-center.x, -center.y);
 
-        for (Point p : points) {
+        ans.translateBy(-center.x, -center.y);
+        for (Point p : ans.points) {
             double x = p.x;
             double y = p.y;
             p.x = x*Math.cos(radians) - y*Math.sin(radians);
             p.y = x*Math.sin(radians) + y*Math.cos(radians);
         }
-        translateBy(center.x, center.y);
+        ans.translateBy(center.x, center.y);
 
-        Point[] unordered = points;
-        if (isValid(points[3], points[0], points[1], points[2]))
-            points = new Point[] {unordered[3], unordered[0], unordered[1], unordered[2]};
-        else if (isValid(points[2], points[3], points[0], points[1]))
-            points = new Point[] {unordered[2], unordered[3], unordered[0], unordered[1]};
-        else if (isValid(points[1], points[2], points[3], points[0]))
-            points = new Point[] {unordered[1], unordered[2], unordered[3], unordered[0]};
-        return this;
+        Point[] unordered = ans.points;
+        if (isValid(unordered[3], unordered[0], unordered[1], unordered[2]))
+            ans.points = new Point[] {unordered[3], unordered[0], unordered[1], unordered[2]};
+        else if (isValid(unordered[2], unordered[3], unordered[0], unordered[1]))
+            ans.points = new Point[] {unordered[2], unordered[3], unordered[0], unordered[1]};
+        else if (isValid(unordered[1], unordered[2], unordered[3], unordered[0]))
+            ans.points = new Point[] {unordered[1], unordered[2], unordered[3], unordered[0]};
+        return ans;
     }
 
     @Override
@@ -80,9 +80,9 @@ public class Square implements Shape {
     public String toString() {
         StringBuilder str = new StringBuilder("[");
         for (Point p : points) {
-            str.append('(').append(p.name).append(", ").append(p.x).append(", ").append(p.y).append("); ");
+            str.append(p).append("; ");
         }
-        str.deleteCharAt(str.length() - 1).append("]\n");
+        str.delete(str.length()-2, str.length()).append("]\n");
         return str.toString();
     }
 
@@ -90,6 +90,21 @@ public class Square implements Shape {
     public Point center() {
         return new Point("center",points[1].x + (points[3].x-points[1].x)/2,points[2].y + (points[0].y - points[2].y)/2);
     }
+
+    @Override
+    protected Square clone() throws CloneNotSupportedException {
+        Square ans = new Square();
+        for (int i = 0; i < 4; i++){
+            ans.points[i] = new Point(points[i].name, points[i].x, points[i].y);
+        }
+        return ans;
+    }
+
+
+
+
+
+
 
     public static void main(String... args) {
         Point  a = new Point("A", 1, 4);
@@ -109,6 +124,10 @@ public class Square implements Shape {
         // prints: [(C, 4.0, 4.0); (D, 1.0, 4.0); (A, 1.0, 1.0); (B, 4.0, 1.0)]
         // note that the names denote which point has moved where
         System.out.println(sq2.rotateBy(90));
+        System.out.println(sq2);
+        System.out.println(sq2.translateBy(3, 3));
+        System.out.println(sq2);
+
     }
 }
 
