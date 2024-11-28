@@ -124,10 +124,6 @@ public class Square implements Shape, Cloneable {
 
 
 
-
-
-
-
     public static void main(String... args) {
         Point  a = new Point("A", 1, 4);
         Point  b = new Point("B", 1, 1);
