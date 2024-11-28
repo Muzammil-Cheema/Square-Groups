@@ -38,7 +38,7 @@ public class Square implements Shape, Cloneable {
     }
 
     @Override
-    public Square rotateBy(int degrees) {
+    public Shape rotateBy(int degrees) {
         Square ans;
         try {
             ans = this.clone();
@@ -48,14 +48,17 @@ public class Square implements Shape, Cloneable {
         Point center = ans.center();
         double radians = Math.PI * degrees/180;
 
-        ans.translateBy(-center.x, -center.y);
+        ans = (Square) ans.translateBy(-center.x, -center.y);
+        System.out.println(ans);
         for (Point p : ans.points) {
             double x = p.x;
             double y = p.y;
             p.x = x*Math.cos(radians) - y*Math.sin(radians);
             p.y = x*Math.sin(radians) + y*Math.cos(radians);
         }
-        ans.translateBy(center.x, center.y);
+        System.out.println(ans);
+        ans = (Square) ans.translateBy(center.x, center.y);
+        System.out.println(ans);
 
         Point[] unordered = ans.points;
         if (isValid(unordered[3], unordered[0], unordered[1], unordered[2]))
@@ -69,11 +72,17 @@ public class Square implements Shape, Cloneable {
 
     @Override
     public Shape translateBy(double x, double y) {
-        for (Point p : points) {
+        Square ans;
+        try {
+            ans = this.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+        for (Point p : ans.points) {
             p.x += x;
             p.y += y;
         }
-        return this;
+        return ans;
     }
 
     @Override
