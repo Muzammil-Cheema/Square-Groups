@@ -5,7 +5,7 @@ import java.util.StringJoiner;
  * doubles specifying its <code>x</code> and <code>y</code> values. Each point also has a unique unmodifiable name,
  * which is a <code>String</code> value.
  */
-public class Point {
+public class Point implements Cloneable {
 
     public double x, y;
     public final String name;
@@ -29,5 +29,21 @@ public class Point {
         if (Double.compare(point.x, x) != 0) return false;
         if (Double.compare(point.y, y) != 0) return false;
         return name.equals(point.name);
+    }
+
+    public boolean equalsIgnoreName(Object o) {
+        if (this == o)
+            return true;
+        if(!(o instanceof Point))
+            return false;
+        Point p = (Point) o;
+        if (Double.compare(p.x, x) != 0) return false;
+        if (Double.compare(p.y, y) != 0) return false;
+        return true;
+    }
+
+    @Override
+    public Point clone() {
+        return new Point(name, x, y);
     }
 }

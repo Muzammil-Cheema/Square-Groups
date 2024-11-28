@@ -1,4 +1,8 @@
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Arrays;
+import java.util.IllegalFormatCodePointException;
+
 /**
  * The class implementing squares.
  * Note: you can add more methods if you want, but additional methods must be <code>private</code> or <code>protected</code>.
@@ -29,38 +33,11 @@ public class Square implements Shape, Cloneable {
             throw new IllegalArgumentException("Point ordering is invalid and will not form a square.");
     }
 
-    private boolean isValid(Point... vertices) {
-        //Checks if all points are the same
-        int count = 0;
-        for (int i = 0; i < 3; i++){
-            if (vertices[i] == vertices[i+1]){
-                count++;
-            }
-        }
-        if (count == 3)
-            return true;
 
-        //Checks if square, then points ordering
-        Point a = vertices[0];
-        Point b = vertices[1];
-        Point c = vertices[2];
-        Point d = vertices[3];
-        return distance(a, b) == distance(b, c) && distance(b, c) == distance(c,d) && distance(c, d) == distance(d, a) &&
-                a.x > b.x && a.x > c.x && a.y >= c.y && a.y > d.y && b.x <= d.x && b.y > d.y && c.x <= d.x;
-    }
-
-    private double distance (Point p1, Point p2){
-        return Math.sqrt(Math.pow(p1.x-p2.x,2) + Math.pow(p1.y-p2.y,2));
-    }
 
     @Override
     public Square rotateBy(int degrees) {
-        Square sq;
-        try {
-            sq = this.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new RuntimeException(e);
-        }
+        Square sq = this.clone();
         Point center = sq.center();
         double radians = Math.PI * degrees/180;
 
@@ -74,23 +51,25 @@ public class Square implements Shape, Cloneable {
         sq = sq.translateBy(center.x, center.y);
 
         Point[] unordered = sq.points;
+        for (int i = 0; i < 4; i++){
+            unordered[i] = round(unordered[i]);
+        }
+        System.out.println(Arrays.toString(unordered));
+
         if (isValid(unordered[3], unordered[0], unordered[1], unordered[2]))
             sq.points = new Point[] {unordered[3], unordered[0], unordered[1], unordered[2]};
         else if (isValid(unordered[2], unordered[3], unordered[0], unordered[1]))
             sq.points = new Point[] {unordered[2], unordered[3], unordered[0], unordered[1]};
         else if (isValid(unordered[1], unordered[2], unordered[3], unordered[0]))
             sq.points = new Point[] {unordered[1], unordered[2], unordered[3], unordered[0]};
+        else if (isValid(unordered[0], unordered[1], unordered[2], unordered[3]))
+            sq.points = new Point[] {unordered[0], unordered[1], unordered[2], unordered[3]};
         return sq;
     }
 
     @Override
     public Square translateBy(double x, double y) {
-        Square sq;
-        try {
-            sq = this.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new RuntimeException(e);
-        }
+        Square sq = this.clone();
         for (Point p : sq.points) {
             p.x += x;
             p.y += y;
@@ -114,14 +93,76 @@ public class Square implements Shape, Cloneable {
     }
 
     @Override
-    protected Square clone() throws CloneNotSupportedException {
-        Square ans = new Square();
+    protected Square clone(){
+        Square square = new Square();
         for (int i = 0; i < 4; i++){
-            ans.points[i] = new Point(points[i].name, points[i].x, points[i].y);
+            square.points[i] = points[i].clone();
         }
-        return ans;
+        return square;
     }
 
+    public boolean isValid(Point... vertices) {
+        //Checks if all points are the same
+        int count = 0;
+        for (int i = 0; i < 3; i++){
+            if (vertices[i] == vertices[i+1]){
+                count++;
+            }
+        }
+        if (count == 3)
+            return true;
+
+        //Checks if square, then points ordering
+        Point a = vertices[0];
+        Point b = vertices[1];
+        Point c = vertices[2];
+        Point d = vertices[3];
+        return distance(a, b) == distance(b, c) && distance(b, c) == distance(c,d) && distance(c, d) == distance(d, a) &&
+                a.x > b.x && a.x > c.x && a.y >= c.y && a.y > d.y && b.x <= d.x && b.y > d.y && c.x <= d.x;
+    }
+
+    private double distance(Point p1, Point p2){
+        return Math.sqrt(Math.pow(p1.x-p2.x,2) + Math.pow(p1.y-p2.y,2));
+    }
+
+    protected Square swapPoints(int i, int j) throws IllegalArgumentException {
+        if (!(i>=0 && i<=3 && j>=0 && j<=3))
+            throw new IllegalArgumentException("Both indices must be between 0 and 3 inclusive.");
+
+        //Swapping x and y coordinates
+        Square square = this.clone();
+        square.points[j].x = points[i].x;
+        square.points[j].y = points[i].y;
+        square.points[i].x = points[j].x;
+        square.points[i].y = points[j].y;
+        //Reordering points to keep counterclockwise order.
+        Point temp = square.points[i];
+        square.points[i] = square.points[j];
+        square.points[j] = temp;
+
+        return square;
+    }
+
+    private static Point round (Point p){
+        BigDecimal x = new BigDecimal(p.x).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal y = new BigDecimal(p.y).setScale(2, RoundingMode.HALF_UP);
+        return new Point(p.name, x.doubleValue(), y.doubleValue());
+    }
+    protected boolean symmetrical(Square s){
+        for (int i = 0; i < 4; i++){
+            if (!points[i].equalsIgnoreName(s.points[i]))
+                return false;
+        }
+
+        return true;
+    }
+    protected boolean equals(Square s) {
+        for (int i = 0; i < 4; i++){
+            if (!points[i].equalsIgnoreName(s.points[i]))
+                return false;
+        }
+        return true;
+    }
 
 
     public static void main(String... args) {
@@ -145,7 +186,7 @@ public class Square implements Shape, Cloneable {
         System.out.println(sq2);
         System.out.println(sq2.translateBy(3, 1.4597));
         System.out.println(sq2);
-
+        System.out.println(sq2.swapPoints(0, 3).swapPoints(1, 2));
     }
 }
 
