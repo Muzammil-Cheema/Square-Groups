@@ -8,7 +8,7 @@ import java.util.Arrays;
 public class Square implements Shape, Cloneable {
     private Point[] points;
 
-    protected Square(){
+    private Square(){
         points = new Point[4];
     }
 
@@ -30,11 +30,27 @@ public class Square implements Shape, Cloneable {
     }
 
     private boolean isValid(Point... vertices) {
+        //Checks if all points are the same
+        int count = 0;
+        for (int i = 0; i < 3; i++){
+            if (vertices[i] == vertices[i+1]){
+                count++;
+            }
+        }
+        if (count == 3)
+            return true;
+
+        //Checks if square, then points ordering
         Point a = vertices[0];
         Point b = vertices[1];
         Point c = vertices[2];
         Point d = vertices[3];
-        return a.x >= b.x && a.x >= c.x && a.y >= c.y && a.y >= d.y && b.x <= d.x && b.y >= d.y && c.x <= d.x;
+        return distance(a, b) == distance(b, c) && distance(b, c) == distance(c,d) && distance(c, d) == distance(d, a) &&
+                a.x > b.x && a.x > c.x && a.y >= c.y && a.y > d.y && b.x <= d.x && b.y > d.y && c.x <= d.x;
+    }
+
+    private double distance (Point p1, Point p2){
+        return Math.sqrt(Math.pow(p1.x-p2.x,2) + Math.pow(p1.y-p2.y,2));
     }
 
     @Override
@@ -49,16 +65,13 @@ public class Square implements Shape, Cloneable {
         double radians = Math.PI * degrees/180;
 
         ans = (Square) ans.translateBy(-center.x, -center.y);
-        System.out.println(ans);
         for (Point p : ans.points) {
             double x = p.x;
             double y = p.y;
             p.x = x*Math.cos(radians) - y*Math.sin(radians);
             p.y = x*Math.sin(radians) + y*Math.cos(radians);
         }
-        System.out.println(ans);
         ans = (Square) ans.translateBy(center.x, center.y);
-        System.out.println(ans);
 
         Point[] unordered = ans.points;
         if (isValid(unordered[3], unordered[0], unordered[1], unordered[2]))
@@ -86,6 +99,11 @@ public class Square implements Shape, Cloneable {
     }
 
     @Override
+    public Point center() {
+        return new Point("center",points[1].x + (points[3].x-points[1].x)/2,points[2].y + (points[0].y - points[2].y)/2);
+    }
+
+    @Override
     public String toString() {
         StringBuilder str = new StringBuilder("[");
         for (Point p : points) {
@@ -93,11 +111,6 @@ public class Square implements Shape, Cloneable {
         }
         str.delete(str.length()-2, str.length()).append("]\n");
         return str.toString();
-    }
-
-    @Override
-    public Point center() {
-        return new Point("center",points[1].x + (points[3].x-points[1].x)/2,points[2].y + (points[0].y - points[2].y)/2);
     }
 
     @Override
@@ -134,7 +147,7 @@ public class Square implements Shape, Cloneable {
         // note that the names denote which point has moved where
         System.out.println(sq2.rotateBy(90));
         System.out.println(sq2);
-        System.out.println(sq2.translateBy(3, 3));
+        System.out.println(sq2.translateBy(3, 1.4597));
         System.out.println(sq2);
 
     }
