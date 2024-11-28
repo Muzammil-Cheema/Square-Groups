@@ -18,7 +18,7 @@ public class Point {
 
     @Override
     public String toString() {
-        return new StringJoiner(", ", "(", ")").add(name).add(Double.toString(x)).add(Double.toString(y)).toString();
+        return new StringJoiner(", ", "(", ")").add(name).add(String.format("%.2f", x)).add(String.format("%.2f", y)).toString();
     }
 
     @Override
