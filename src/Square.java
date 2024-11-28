@@ -8,7 +8,7 @@ import java.util.Arrays;
 public class Square implements Shape, Cloneable {
     private Point[] points;
 
-    private Square(){
+    protected Square(){
         points = new Point[4];
     }
 
@@ -54,48 +54,48 @@ public class Square implements Shape, Cloneable {
     }
 
     @Override
-    public Shape rotateBy(int degrees) {
-        Square ans;
+    public Square rotateBy(int degrees) {
+        Square sq;
         try {
-            ans = this.clone();
+            sq = this.clone();
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e);
         }
-        Point center = ans.center();
+        Point center = sq.center();
         double radians = Math.PI * degrees/180;
 
-        ans = (Square) ans.translateBy(-center.x, -center.y);
-        for (Point p : ans.points) {
+        sq = sq.translateBy(-center.x, -center.y);
+        for (Point p : sq.points) {
             double x = p.x;
             double y = p.y;
             p.x = x*Math.cos(radians) - y*Math.sin(radians);
             p.y = x*Math.sin(radians) + y*Math.cos(radians);
         }
-        ans = (Square) ans.translateBy(center.x, center.y);
+        sq = sq.translateBy(center.x, center.y);
 
-        Point[] unordered = ans.points;
+        Point[] unordered = sq.points;
         if (isValid(unordered[3], unordered[0], unordered[1], unordered[2]))
-            ans.points = new Point[] {unordered[3], unordered[0], unordered[1], unordered[2]};
+            sq.points = new Point[] {unordered[3], unordered[0], unordered[1], unordered[2]};
         else if (isValid(unordered[2], unordered[3], unordered[0], unordered[1]))
-            ans.points = new Point[] {unordered[2], unordered[3], unordered[0], unordered[1]};
+            sq.points = new Point[] {unordered[2], unordered[3], unordered[0], unordered[1]};
         else if (isValid(unordered[1], unordered[2], unordered[3], unordered[0]))
-            ans.points = new Point[] {unordered[1], unordered[2], unordered[3], unordered[0]};
-        return ans;
+            sq.points = new Point[] {unordered[1], unordered[2], unordered[3], unordered[0]};
+        return sq;
     }
 
     @Override
-    public Shape translateBy(double x, double y) {
-        Square ans;
+    public Square translateBy(double x, double y) {
+        Square sq;
         try {
-            ans = this.clone();
+            sq = this.clone();
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e);
         }
-        for (Point p : ans.points) {
+        for (Point p : sq.points) {
             p.x += x;
             p.y += y;
         }
-        return ans;
+        return sq;
     }
 
     @Override
