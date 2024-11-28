@@ -54,7 +54,6 @@ public class Square implements Shape, Cloneable {
         for (int i = 0; i < 4; i++){
             unordered[i] = round(unordered[i]);
         }
-        System.out.println(Arrays.toString(unordered));
 
         if (isValid(unordered[3], unordered[0], unordered[1], unordered[2]))
             sq.points = new Point[] {unordered[3], unordered[0], unordered[1], unordered[2]};
@@ -62,8 +61,6 @@ public class Square implements Shape, Cloneable {
             sq.points = new Point[] {unordered[2], unordered[3], unordered[0], unordered[1]};
         else if (isValid(unordered[1], unordered[2], unordered[3], unordered[0]))
             sq.points = new Point[] {unordered[1], unordered[2], unordered[3], unordered[0]};
-        else if (isValid(unordered[0], unordered[1], unordered[2], unordered[3]))
-            sq.points = new Point[] {unordered[0], unordered[1], unordered[2], unordered[3]};
         return sq;
     }
 
@@ -148,14 +145,7 @@ public class Square implements Shape, Cloneable {
         BigDecimal y = new BigDecimal(p.y).setScale(2, RoundingMode.HALF_UP);
         return new Point(p.name, x.doubleValue(), y.doubleValue());
     }
-    protected boolean symmetrical(Square s){
-        for (int i = 0; i < 4; i++){
-            if (!points[i].equalsIgnoreName(s.points[i]))
-                return false;
-        }
 
-        return true;
-    }
     protected boolean equals(Square s) {
         for (int i = 0; i < 4; i++){
             if (!points[i].equalsIgnoreName(s.points[i]))

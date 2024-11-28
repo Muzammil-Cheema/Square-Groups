@@ -23,8 +23,8 @@ public class SquareSymmetries extends Square implements Symmetries<Square> {
         //All reflections
         symmetries.add(square.swapPoints(0, 3).swapPoints(1, 2));
         symmetries.add(square.swapPoints(0, 1).swapPoints(2, 3));
-        symmetries.add(square.swapPoints(0,2));
         symmetries.add(square.swapPoints(1,3));
+        symmetries.add(square.swapPoints(0,2));
 
         return symmetries;
     }
