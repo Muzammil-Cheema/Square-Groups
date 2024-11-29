@@ -1,7 +1,6 @@
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Arrays;
-import java.util.IllegalFormatCodePointException;
 
 /**
  * The class implementing squares.
@@ -67,9 +66,8 @@ public class Square implements Shape, Cloneable {
     @Override
     public Square translateBy(double x, double y) {
         Square sq = this.clone();
-        for (Point p : sq.points) {
-            p.x += x;
-            p.y += y;
+        for (int i = 0; i < 4; i++) {
+            sq.points[i] = round(new Point(sq.points[i].name, sq.points[i].x+x, sq.points[i].y+y));
         }
         return sq;
     }
@@ -153,7 +151,6 @@ public class Square implements Shape, Cloneable {
         }
         return true;
     }
-
 
     public static void main(String... args) {
         Point  a = new Point("A", 1, 4);
