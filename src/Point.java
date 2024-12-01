@@ -31,19 +31,5 @@ public class Point implements Cloneable {
         return name.equals(point.name);
     }
 
-    public boolean equalsIgnoreName(Object o) {
-        if (this == o)
-            return true;
-        if(!(o instanceof Point))
-            return false;
-        Point p = (Point) o;
-        if (Double.compare(p.x, x) != 0) return false;
-        if (Double.compare(p.y, y) != 0) return false;
-        return true;
-    }
 
-    @Override
-    public Point clone() {
-        return new Point(name, x, y);
-    }
 }

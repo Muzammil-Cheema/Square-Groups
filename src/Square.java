@@ -11,6 +11,8 @@ import java.util.Arrays;
 public class Square implements Shape, Cloneable {
     private Point[] points;
 
+
+
     protected Square(){
         points = new Point[4];
     }
@@ -87,16 +89,18 @@ public class Square implements Shape, Cloneable {
         return str.toString();
     }
 
+
+
     @Override
     protected Square clone(){
         Square square = new Square();
         for (int i = 0; i < 4; i++){
-            square.points[i] = points[i].clone();
+            square.points[i] = new Point(points[i].name, points[i].x, points[i].y);
         }
         return square;
     }
 
-    public boolean isValid(Point... vertices) {
+    private boolean isValid(Point... vertices) {
         //Checks if all points are the same
         int count = 0;
         for (int i = 0; i < 3; i++){
@@ -146,7 +150,7 @@ public class Square implements Shape, Cloneable {
 
     protected boolean equals(Square s) {
         for (int i = 0; i < 4; i++){
-            if (!points[i].equalsIgnoreName(s.points[i]))
+            if (points[i].x != s.points[i].x || points[i].y != s.points[i].y)
                 return false;
         }
         return true;
