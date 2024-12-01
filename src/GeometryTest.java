@@ -29,7 +29,6 @@ public class GeometryTest {
         for (Square s : symmetries)
             System.out.println(s.toString());
 
-//        System.out.println(s1.rotateBy(270));
-//        System.out.println(s1.rotateBy(270).isValid(new Point("OneTwo", 1, 2), new Point("ZeroTwo", 0, 2), new Point("ZeroOne", 0, 1), new Point("OneOne", 1, 1)));
+        System.out.println(s1.rotateBy(250));
     }
 }
