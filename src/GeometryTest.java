@@ -28,7 +28,5 @@ public class GeometryTest {
         //    assignment PDF for details.
         for (Square s : symmetries)
             System.out.println(s.toString());
-
-        System.out.println(s1.rotateBy(250));
     }
 }

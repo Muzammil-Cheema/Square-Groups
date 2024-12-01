@@ -10,10 +10,13 @@ import java.util.Arrays;
  */
 public class Square implements Shape, Cloneable {
     private Point[] points;
+    Point[] getPoints() {
+        return points;
+    }
 
 
 
-    protected Square(){
+    private Square(){
         points = new Point[4];
     }
 
@@ -32,6 +35,8 @@ public class Square implements Shape, Cloneable {
         points = Arrays.copyOfRange(vertices, 0, 4);
         if (!isValid(points))
             throw new IllegalArgumentException("Point ordering is invalid and will not form a square.");
+        for (int i = 0; i < 4; i++)
+            points[i] = round(points[i]);
     }
 
 
@@ -124,36 +129,10 @@ public class Square implements Shape, Cloneable {
         return Math.sqrt(Math.pow(p1.x-p2.x,2) + Math.pow(p1.y-p2.y,2));
     }
 
-    protected Square swapPoints(int i, int j) throws IllegalArgumentException {
-        if (!(i>=0 && i<=3 && j>=0 && j<=3))
-            throw new IllegalArgumentException("Both indices must be between 0 and 3 inclusive.");
-
-        //Swapping x and y coordinates
-        Square square = this.clone();
-        square.points[j].x = points[i].x;
-        square.points[j].y = points[i].y;
-        square.points[i].x = points[j].x;
-        square.points[i].y = points[j].y;
-        //Reordering points to keep counterclockwise order.
-        Point temp = square.points[i];
-        square.points[i] = square.points[j];
-        square.points[j] = temp;
-
-        return square;
-    }
-
     private static Point round (Point p){
         BigDecimal x = new BigDecimal(p.x).setScale(2, RoundingMode.HALF_UP);
         BigDecimal y = new BigDecimal(p.y).setScale(2, RoundingMode.HALF_UP);
         return new Point(p.name, x.doubleValue(), y.doubleValue());
-    }
-
-    protected boolean equals(Square s) {
-        for (int i = 0; i < 4; i++){
-            if (points[i].x != s.points[i].x || points[i].y != s.points[i].y)
-                return false;
-        }
-        return true;
     }
 
     public static void main(String... args) {
@@ -174,10 +153,6 @@ public class Square implements Shape, Cloneable {
         // prints: [(C, 4.0, 4.0); (D, 1.0, 4.0); (A, 1.0, 1.0); (B, 4.0, 1.0)]
         // note that the names denote which point has moved where
         System.out.println(sq2.rotateBy(90));
-        System.out.println(sq2);
-        System.out.println(sq2.translateBy(3, 1.4597));
-        System.out.println(sq2);
-        System.out.println(sq2.swapPoints(0, 3).swapPoints(1, 2));
     }
 }
 
