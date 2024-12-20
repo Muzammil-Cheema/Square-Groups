@@ -5,7 +5,7 @@ import java.util.StringJoiner;
  * doubles specifying its <code>x</code> and <code>y</code> values. Each point also has a unique unmodifiable name,
  * which is a <code>String</code> value.
  */
-public class Point implements Cloneable {
+public class Point {
 
     public double x, y;
     public final String name;
